@@ -325,19 +325,19 @@
 
         <div class="summary-grid">
           <div class="card">
-            <h3>Total Received</h3>
+            <h3 id="card1Title">Total Received</h3>
             <div class="value" id="totalReceived">0</div>
-            <div class="note">All recorded communications</div>
+            <div class="note" id="card1Note">All recorded communications</div>
           </div>
           <div class="card">
-            <h3>Total Replied</h3>
+            <h3 id="card2Title">Total Replied</h3>
             <div class="value" id="totalReplied">0</div>
-            <div class="note">Total completed replies</div>
+            <div class="note" id="card2Note">Total completed replies</div>
           </div>
           <div class="card">
-            <h3>Overall Reply Rate</h3>
+            <h3 id="card3Title">Overall Reply Rate</h3>
             <div class="value" id="replyRate">0%</div>
-            <div class="note">Replied divided by received</div>
+            <div class="note" id="card3Note">Replied divided by received</div>
           </div>
           <div class="card">
             <h3>Locations Covered</h3>
@@ -348,13 +348,13 @@
 
         <div class="dashboard-grid">
           <div class="chart-card">
-            <h2>Top 10 Locations by Received Communications</h2>
+            <h2 id="chart1Title">Top 10 Locations by Received Communications</h2>
             <div class="chart-wrap">
               <canvas id="receivedChart"></canvas>
             </div>
           </div>
           <div class="chart-card">
-            <h2>Received vs Replied: Top 10 Volume Locations</h2>
+            <h2 id="chart2Title">Received vs Replied: Top 10 Volume Locations</h2>
             <div class="chart-wrap">
               <canvas id="comparisonChart"></canvas>
             </div>
@@ -362,13 +362,13 @@
         </div>
 
         <div class="dashboard-grid">
-          <div class="chart-card">
+          <div class="chart-card" id="replyRateCard">
             <h2>Top Reply Rate Performance</h2>
             <div class="chart-wrap tall">
               <canvas id="replyRateChart"></canvas>
             </div>
           </div>
-          <div class="chart-card">
+          <div class="chart-card" id="statusCard">
             <h2>Reply Status Distribution</h2>
             <div class="chart-wrap">
               <canvas id="statusChart"></canvas>
@@ -401,10 +401,10 @@
               <tr>
                 <th>No</th>
                 <th>Location / Department</th>
-                <th>Received</th>
-                <th>Replied</th>
-                <th>Pending</th>
-                <th>Reply Rate</th>
+                <th id="thReceived">Received</th>
+                <th id="thReplied">Replied</th>
+                <th id="thPending">Pending</th>
+                <th id="thRate">Reply Rate</th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -420,46 +420,33 @@
 
   <script>
     const incomingData = [
-      ['ARUSHA',1188,170], ['ARUSHA CUSTOMS AND EXCISE',3,0], ['COMMISSIONER GENERAL OFFICE',112,1],
-      ['CUSTOMS AND  EXCISE DEPARTMENT',9,0], ['CUSTOMS OPERATIONS DEVISION CUSTOMS SERVICE CENTRE SECTION',30,0],
-      ['CUSTOMS OPERATIONS DEVISION DSM WHARF SECTION',3,1], ['CUSTOMS OPERATIONS DEVISION JULIUS NYERERE INTERNATIONAL AIRPORT',2,0],
-      ['DODOMA',110,2], ['DOMESTIC REVENUE DEPARTMENT',455,23], ['DRD HEAD OFFICE',34,2],
-      ['ESTATES MANAGEMENT UNIT',0,0], ['FINANCE DEPARTMENT',14,1], ['GEITA',220,26], ['ILALA',2759,784],
-      ['INFORMATION AND COMMUNCATION TECHNOLOGY DEPARTMENT',64,0], ['INSTITUTE OF TAX ADMINISTRATION',1,0],
-      ['INTERNAL AFFAIRS DEPARTMENT ',2,0], ['INTERNAL AUDIT DEPARTMENT',8,0], ['IRINGA',134,54], ['KAGERA',23,8],
-      ['KAHAMA',68,1], ['KAHAMA CUSTOMS AND EXCISE',1,0], ['KARIAKOO',940,375], ['KATAVI',43,5],
-      ['KIGOMA',169,20], ['KIGOMA CUSTOMS AND EXCISE',2,0], ['KILIMANJARO',152,9], ['KINONDONI',1416,20],
-      ['LARGE TAXPAYERS DEPARTMENT',1022,262], ['LEGAL SERVICES DEPARTMENT',8,0], ['LINDI',117,48], ['MANYARA',47,2],
-      ['MARA',130,55], ['MBEYA',129,1], ['MEDIUM TAXPAYERS DIVISION',976,111], ['MOROGORO',1104,295],
-      ['MOROGORO CUSTOMS AND EXCISE',2,1], ['MTWARA',69,23], ['MTWARA CUSTOMS AND EXCISE',1,0], ['MWANZA',393,68],
-      ['NJOMBE',42,1], ['PEMBA',4,2], ['PROCUREMENT MANAGEMENT DEPARTMENT',1,0], ['PWANI',168,36],
-      ['RESEARCH AND PLANNING DEPARTMENT',1,0], ['RISK AND COMPLIANCE DEPARTMENT',17,0], ['RUKWA',39,22], ['RUVUMA',63,41],
-      ['SHINYANGA',31,5], ['SIMIYU',32,0], ['SINGIDA',20,0], ['SONGWE',40,0], ['TABORA',736,378], ['TANGA',226,0],
-      ['TANGA CUSTOMS AND EXCISE',4,0], ['TAX INVESTIGATION DEPARTMENT',9,0], ['TAX INVESTIGATIONS OPERATION DIVISION DAR ZONE 1',41,1],
-      ['TAX INVESTIGATIONS OPERATION DIVISION DAR ZONE 2',1,0], ['TAX INVESTIGATIONS OPERATION DIVISION NORTHERN ZONE',1,0],
-      ['TAXPAYER EDUCATION AND COMMUNICATION DEPARTMENT',31,3], ['TEGETA',1020,226], ['TEMEKE',535,3], ['ZANZIBAR',46,2]
+      ['ARUSHA',1188,170], ['ARUSHA CUSTOMS AND EXCISE',3,0], ['DODOMA',110,2], ['GEITA',220,26], ['ILALA',2759,784],
+      ['IRINGA',134,54], ['KAGERA',23,8], ['KAHAMA',68,1], ['KAHAMA CUSTOMS AND EXCISE',1,0], ['KARIAKOO',940,375],
+      ['KATAVI',43,5], ['KIGOMA',169,20], ['KIGOMA CUSTOMS AND EXCISE',2,0], ['KILIMANJARO',152,9], ['KINONDONI',1416,20],
+      ['LARGE TAXPAYERS DEPARTMENT',1022,262], ['LINDI',117,48], ['MANYARA',47,2], ['MARA',130,55], ['MBEYA',129,1],
+      ['MEDIUM TAXPAYERS DIVISION',976,111], ['MOROGORO',1104,295], ['MOROGORO CUSTOMS AND EXCISE',2,1], ['MTWARA',69,23],
+      ['MTWARA CUSTOMS AND EXCISE',1,0], ['MWANZA',393,68], ['NJOMBE',42,1], ['PEMBA',4,2], ['PWANI',168,36], ['RUKWA',39,22],
+      ['RUVUMA',63,41], ['SHINYANGA',31,5], ['SIMIYU',32,0], ['SINGIDA',20,0], ['SONGWE',40,0], ['TABORA',736,378],
+      ['TANGA',226,0], ['TANGA CUSTOMS AND EXCISE',4,0], ['TAX INVESTIGATION DEPARTMENT',9,0], ['TAX INVESTIGATIONS OPERATION DIVISION DAR ZONE 1',41,1],
+      ['TAX INVESTIGATIONS OPERATION DIVISION DAR ZONE 2',1,0], ['TAX INVESTIGATIONS OPERATION DIVISION NORTHERN ZONE',1,0], ['TEGETA',1020,226],
+      ['TEMEKE',535,3], ['ZANZIBAR',46,2]
     ];
+
     const outgoingData = [
-      ['ARUSHA Tax Centres',333,5], ['ARUSHA',8,1], ['ARUSHA ARUMERU DISTRICT',10,0], ['ARUSHA EFD AND ETS MANAGEMENT',3,0],
-      ['ARUSHA EXAMINATION',98,3], ['ARUSHA MONDULI DISTRICT',4,0], ['ARUSHA MTO WA MBU TAX CENTRE',5,0], ['ARUSHA NGARAMTONI TAX CENTRE',1,0],
-      ['ARUSHA NORMAL FLOW MANAGEMENT',103,1], ['ARUSHA TAX AUDIT',56,0], ['GEITA',6,0], ['GEITA REGISTRATION & DATA PROCESSING',11,0],
-      ['ILALA',22,0], ['ILALA BUGURUNI TAX CENTRE',9,0], ['ILALA DEBT ENFORCEMENTS',68,3], ['ILALA EFD AND ETS MANAGEMENT',962,21],
-      ['ILALA EXAMINATION',12,0], ['ILALA GONGOLAMBOTO TAX CENTRE',1,0], ['ILALA NORMAL FLOW MANAGEMENT',206,10], ['ILALA REGISTRATION & DATA PROCESSING',17,0],
-      ['ILALA TABATA TAX CENTRE',18,3], ['ILALA TAX AUDIT',3,0], ['ILALA UPANGA TAX CENTRE',33,3], ['IRINGA',2,0], ['IRINGA AUDIT AND COMPLIANCE',39,2],
-      ['IRINGA MUFINDI DISTRICT',45,0], ['IRINGA TAX AUDIT',1,0], ['KAHAMA',1,0], ['KAHAMA AUDIT AND COMPLIANCE',2,0], ['KARIAKOO',1458,80],
-      ['KARIAKOO SHAURIMOYO TAX CENTRE',65,4], ['KARIAKOO TAX AUDIT',234,11], ['KIGOMA AUDIT AND COMPLIANCE',5,0], ['KINONDONI MASAKI',2,0],
-      ['LARGE TAXPAYER OPERATIONS DIVISION RETURNS AND DATA PROCESSING SECTION',1,0], ['LARGE TAXPAYERS DEPARTMENT',4,0], ['LINDI',1,0], ['LINDI DEBT ENFORCEMENTS',28,0],
-      ['LINDI KILWA DISTRICT',9,0], ['LINDI NACHINGWEA DISTRICT',50,0], ['LINDI RUANGWA DISTRICT',2,0], ['LINDI TAX AUDIT',3,0], ['LINDI TAXPAYER\'S SERVICE',96,4],
-      ['MEDIUM TAXPAYERS DIVISION',1,0], ['MEDIUM TAXPAYERS DIVISION MEDIUM TAXPAYERS COMPLIANCE & ENFORCEMENT SECTION',6,0], ['MEDIUM TAXPAYERS DIVISION RETURN & DATA PROCESSING SECTION',31,2],
-      ['MOROGORO',8,0], ['MOROGORO AUDIT AND COMPLIANCE',130,0], ['MOROGORO KILOMBERO DISTRICT',3,0], ['MOROGORO NORMAL FLOW MANAGEMENT',3,0],
-      ['MOROGORO REGISTRATION & DATA PROCESSING',1,0], ['MOROGORO RUAHA TAX CENTRE',1,0], ['MOROGORO TAXPAYER\'S SERVICE',30,1], ['MTWARA',5,0], ['MTWARA DEBT ENFORCEMENTS',1,1],
-      ['MTWARA NORMAL FLOW MANAGEMENT',25,0], ['MTWARA TAX CENTER SERVICES',1,0], ['MWANZA',8,0], ['MWANZA EXAMINATION',5,0], ['MWANZA MKOLANI TAX CENTRE',1,0],
-      ['MWANZA REGISTRATION & DATA PROCESSING',18,1], ['MWANZA TAX AUDIT',1,0], ['PEMBA WETE DISTRICT',2,0], ['RUVUMA MADABA TAX CENTRE',1,0], ['SHINYANGA',3,0],
-      ['TEGETA',16,0], ['TEGETA AUDIT AND COMPLIANCE',4,0], ['TEGETA BUNJU TAX CENTRE',1,0], ['TEGETA TEGETA TAX CENTRE',45,0], ['TEMEKE',3,0],
-      ['TEMEKE EXAMINATION',8,2], ['TEMEKE MBAGALA TAX CENTRE',1,0]
+      ['ARUSHA',621,0], ['ARUSHA CUSTOMS AND EXCISE',0,0], ['DODOMA',0,0], ['GEITA',17,0], ['ILALA',1351,0],
+      ['IRINGA',87,0], ['KAGERA',0,0], ['KAHAMA',3,0], ['KAHAMA CUSTOMS AND EXCISE',0,0], ['KARIAKOO',1757,0],
+      ['KATAVI',0,0], ['KIGOMA',5,0], ['KIGOMA CUSTOMS AND EXCISE',0,0], ['KILIMANJARO',0,0], ['KINONDONI',2,0],
+      ['LARGE TAXPAYERS DEPARTMENT',0,0], ['LINDI',189,0], ['MANYARA',0,0], ['MARA',0,0], ['MBEYA',0,0],
+      ['MEDIUM TAXPAYERS DIVISION',38,0], ['MOROGORO',0,0], ['MOROGORO CUSTOMS AND EXCISE',176,0], ['MTWARA',32,0],
+      ['MTWARA CUSTOMS AND EXCISE',0,0], ['MWANZA',33,0], ['NJOMBE',0,0], ['PEMBA',0,0], ['PWANI',0,0], ['RUKWA',0,0],
+      ['RUVUMA',1,0], ['SHINYANGA',3,0], ['SIMIYU',0,0], ['SINGIDA',0,0], ['SONGWE',0,0], ['TABORA',0,0],
+      ['TANGA',0,0], ['TANGA CUSTOMS AND EXCISE',0,0], ['TAX INVESTIGATION DEPARTMENT',0,0], ['TAX INVESTIGATIONS OPERATION DIVISION DAR ZONE 1',0,0],
+      ['TAX INVESTIGATIONS OPERATION DIVISION DAR ZONE 2',0,0], ['TAX INVESTIGATIONS OPERATION DIVISION NORTHERN ZONE',0,0], ['TEGETA',66,0],
+      ['TEMEKE',12,0], ['ZANZIBAR',0,0]
     ];
 
     let activeRecords = [];
+    let isOutgoingMode = false;
     let chartReceived;
     let chartComparison;
     let chartReplyRate;
@@ -494,14 +481,25 @@
       tableBody.innerHTML = '';
       filteredRecords.forEach(record => {
         const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${record.no}</td>
-          <td>${record.location}</td>
-          <td>${record.received.toLocaleString()}</td>
-          <td>${record.replied.toLocaleString()}</td>
-          <td>${record.pending.toLocaleString()}</td>
-          <td class="${getRateClass(record.replyRate)}">${record.replyRate.toFixed(1)}%</td>
-        `;
+        if (isOutgoingMode) {
+          row.innerHTML = `
+            <td>${record.no}</td>
+            <td>${record.location}</td>
+            <td>${record.received.toLocaleString()}</td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+          `;
+        } else {
+          row.innerHTML = `
+            <td>${record.no}</td>
+            <td>${record.location}</td>
+            <td>${record.received.toLocaleString()}</td>
+            <td>${record.replied.toLocaleString()}</td>
+            <td>${record.pending.toLocaleString()}</td>
+            <td class="${getRateClass(record.replyRate)}">${record.replyRate.toFixed(1)}%</td>
+          `;
+        }
         tableBody.appendChild(row);
       });
     }
@@ -534,20 +532,35 @@
 
     function renderDashboard(datasetName) {
       const rows = datasetName === 'incoming' ? incomingData : outgoingData;
+      isOutgoingMode = datasetName === 'outgoing';
       activeRecords = toRecords(rows);
 
       const totalReceived = activeRecords.reduce((sum, r) => sum + r.received, 0);
       const totalReplied = activeRecords.reduce((sum, r) => sum + r.replied, 0);
       const totalPending = totalReceived - totalReplied;
       const overallReplyRate = totalReceived === 0 ? 0 : (totalReplied / totalReceived) * 100;
+      const activeSentLocations = activeRecords.filter(r => r.received > 0).length;
+      const averageSent = activeRecords.length === 0 ? 0 : totalReceived / activeRecords.length;
+
+      document.getElementById('thReceived').textContent = isOutgoingMode ? 'Sent' : 'Received';
+      document.getElementById('thReplied').style.display = isOutgoingMode ? 'none' : '';
+      document.getElementById('thPending').style.display = isOutgoingMode ? 'none' : '';
+      document.getElementById('thRate').style.display = isOutgoingMode ? 'none' : '';
 
       document.getElementById('dashboardTitle').textContent =
         `${datasetName === 'incoming' ? 'Incoming' : 'Outgoing'} Communication Performance Dashboard`;
       document.getElementById('dashboardSubtitle').textContent =
         `Analysis of ${datasetName} communication records by location/department`;
+      document.getElementById('card1Title').textContent = isOutgoingMode ? 'Total Sent' : 'Total Received';
+      document.getElementById('card1Note').textContent = isOutgoingMode ? 'All sent communications' : 'All recorded communications';
+      document.getElementById('card2Title').textContent = isOutgoingMode ? 'Active Senders' : 'Total Replied';
+      document.getElementById('card2Note').textContent = isOutgoingMode ? 'Locations with sent communications' : 'Total completed replies';
+      document.getElementById('card3Title').textContent = isOutgoingMode ? 'Avg Sent / Location' : 'Overall Reply Rate';
+      document.getElementById('card3Note').textContent = isOutgoingMode ? 'Average sent volume across locations' : 'Replied divided by received';
+
       document.getElementById('totalReceived').textContent = totalReceived.toLocaleString();
-      document.getElementById('totalReplied').textContent = totalReplied.toLocaleString();
-      document.getElementById('replyRate').textContent = overallReplyRate.toFixed(1) + '%';
+      document.getElementById('totalReplied').textContent = isOutgoingMode ? activeSentLocations.toLocaleString() : totalReplied.toLocaleString();
+      document.getElementById('replyRate').textContent = isOutgoingMode ? averageSent.toFixed(1) : `${overallReplyRate.toFixed(1)}%`;
       document.getElementById('locationsCount').textContent = activeRecords.length;
 
       applySearch();
@@ -562,7 +575,7 @@
         data: {
           labels: top10.map(r => r.location),
           datasets: [{
-            label: 'Received',
+            label: isOutgoingMode ? 'Sent' : 'Received',
             data: top10.map(r => r.received),
             backgroundColor: '#0f4c81'
           }]
@@ -583,8 +596,8 @@
         data: {
           labels: top10.map(r => r.location),
           datasets: [
-            { label: 'Received', data: top10.map(r => r.received), backgroundColor: '#0f4c81' },
-            { label: 'Replied', data: top10.map(r => r.replied), backgroundColor: '#2a9d8f' }
+            { label: isOutgoingMode ? 'Sent' : 'Received', data: top10.map(r => r.received), backgroundColor: '#0f4c81' },
+            { label: 'Replied', data: top10.map(r => r.replied), backgroundColor: '#2a9d8f', hidden: isOutgoingMode }
           ]
         },
         options: {
@@ -655,3 +668,11 @@
   </script>
 </body>
 </html>
+      document.getElementById('chart1Title').textContent = isOutgoingMode
+        ? 'Top 10 Locations by Sent Communications'
+        : 'Top 10 Locations by Received Communications';
+      document.getElementById('chart2Title').textContent = isOutgoingMode
+        ? 'Top 10 Sent Volume Locations'
+        : 'Received vs Replied: Top 10 Volume Locations';
+      document.getElementById('replyRateCard').style.display = isOutgoingMode ? 'none' : '';
+      document.getElementById('statusCard').style.display = isOutgoingMode ? 'none' : '';
